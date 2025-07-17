@@ -39,7 +39,8 @@ class InvoicePaymentController extends Controller
         $invoice->save();
 
         return response()->json([
-            'status' => $status,
+            'status' => true,
+            'simulate' => $status,
             'message' => 'Invoice payment processed.',
         ]);
     }

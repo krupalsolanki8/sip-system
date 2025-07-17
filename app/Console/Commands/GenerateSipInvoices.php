@@ -36,8 +36,6 @@ class GenerateSipInvoices extends Command
             ->whereDate('end_date', '>=', $target->toDateString())
             ->get();
 
-        \Log::info('invoice generation started', [$target->toDateString(), $sips]);
-
         foreach ($sips as $sip) {
             if ($sip->frequency === 'daily') {
                 $scheduledDate = $target->copy()->setTime(0, 0);

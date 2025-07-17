@@ -32,9 +32,7 @@ Route::middleware(['web', 'auth', 'verified'])->group(function () {
         Route::get('/', [InvoiceController::class, 'index'])->name('index');
         Route::get('datatable', [InvoiceController::class, 'datatable'])->name('datatable');
         Route::get('{invoice}/download', [InvoiceController::class, 'download'])->name('download');
-        Route::post('process-payment', [InvoicePaymentController::class, 'process'])
-            ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])
-            ->name('process-payment');
+        Route::post('process-payment', [InvoicePaymentController::class, 'process'])->name('process-payment');
     });
 });
 

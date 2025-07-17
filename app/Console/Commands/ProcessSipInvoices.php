@@ -31,8 +31,6 @@ class ProcessSipInvoices extends Command
      */
     public function handle()
     {
-        \Log::info('invoice process started');
-
         // $cutoff = Carbon::now()->subHours(25); // update invoice delay
         $now = Carbon::now();
 
@@ -51,16 +49,19 @@ class ProcessSipInvoices extends Command
             
             if ($response->ok()) {
                 $status = $response->json('status');
-                $this->info("Invoice #{$invoice->id} processed: {$status}");
-                if ($status === 'success') {
-                    // Reload the invoice to get the updated status
-                    $invoice->refresh();
-                    // Generate and store PDF invoice using the service
-                    app(InvoicePdfService::class)->generate($invoice);
-                    event(new InvoicePaid($invoice->user, $invoice));
-                } elseif ($status === 'failed') {
-                    $invoice->refresh();
-                    event(new InvoiceFailed($invoice->user, $invoice));
+                if($status) {
+                    $simulate = $response->json('simulate');
+                    $this->info("Invoice #{$invoice->id} processed: {$simulate}");
+                    if ($simulate === 'success') {
+                        // Reload the invoice to get the updated status
+                        $invoice->refresh();
+                        // Generate and store PDF invoice using the service
+                        app(InvoicePdfService::class)->generate($invoice);
+                        event(new InvoicePaid($invoice->user, $invoice));
+                    } elseif ($simulate === 'failed') {
+                        $invoice->refresh();
+                        event(new InvoiceFailed($invoice->user, $invoice));
+                    }
                 }
             } else {
                 $this->error("Failed to process invoice #{$invoice->id}");
