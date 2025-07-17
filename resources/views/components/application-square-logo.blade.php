@@ -1,0 +1,1 @@
+<img src="{{ asset('images/application-logo/logo.png') }}" alt="Application Logo" {{ $attributes }}>

@@ -1,0 +1,1 @@
+<img src="{{ asset('images/application-logo/flate-logo.png') }}" alt="Application Logo" {{ $attributes }}>
